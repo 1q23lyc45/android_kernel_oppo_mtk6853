@@ -25,7 +25,7 @@ jobs:
     - name: 构建编译内核环境
       run: |
         sudo apt-get update
-        sudo -E apt-get -y -qq install git make bc bison ccache openssl dos2unix zip kmod cpio flex libelf-dev curl libssl-dev libtfm-dev wget device-tree-compiler ca-certificates python3 python2 binutils binutils-aarch64-linux-gnu binutils-arm-linux-gnueabi
+        sudo -E apt-get -y -qq install git make bc bison ccache openssl dos2unix zip kmod cpio flex libelf-dev curl libssl-dev libtfm-dev wget device-tree-compiler ca-certificates aria2 python3 python2 binutils binutils-aarch64-linux-gnu binutils-arm-linux-gnueabi
         mkdir -p $GITHUB_WORKSPACE/kernel_workspace
 
 
@@ -35,7 +35,7 @@ jobs:
         cd $GITHUB_WORKSPACE/kernel_workspace
         
         mkdir gcc64
-        wget -O gcc-aarch64.tar.gz https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz
+        aria2c -o gcc-aarch64.tar.gz https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz
         tar -C gcc64/ -zxvf gcc-aarch64.tar.gz
     
         mkdir gcc32
@@ -52,7 +52,8 @@ jobs:
     - name: 下载内核源码
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace
-        git clone https://github.com/wu17481748/android_kernel_4.14.186_oppo_mtk6853 android-kernel --depth=1
+        mkdir android-kernel
+        git clone https://github.com/1q23lyc45/android_kernel_4.14.186_oppo_mtk6853 android-kernel --depth=1
         cd android-kernel
         mv vendor ../
         cp -a 4.14.186/* ./
@@ -100,7 +101,12 @@ jobs:
         echo "CONFIG_SECURITY_SELINUX_DEVELOP=y" >> android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }}
         echo "CONFIG_SECURITY_SELINUX_AVC_STATS=y" >> android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }}
       
-               
+    - name: 开启Kallsyms
+    - run: |
+        cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
+        echo "CONFIG_KALLSYMS=y" >> android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }}
+        echo "CONFIG_KALLSYMS_ALL=y" >> android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }}
+        
     - name: 设置ccache缓存
       uses: hendrikmuhs/ccache-action@v1.2
       with:
