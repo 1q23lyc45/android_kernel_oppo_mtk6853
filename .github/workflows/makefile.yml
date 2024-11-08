@@ -102,7 +102,7 @@ jobs:
         echo "CONFIG_SECURITY_SELINUX_AVC_STATS=y" >> android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }}
       
     - name: 开启Kallsyms
-    - run: |
+      run: |
         cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
         echo "CONFIG_KALLSYMS=y" >> android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }}
         echo "CONFIG_KALLSYMS_ALL=y" >> android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }}
