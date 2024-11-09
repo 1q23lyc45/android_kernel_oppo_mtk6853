@@ -35,11 +35,11 @@ jobs:
         cd $GITHUB_WORKSPACE/kernel_workspace
         
         mkdir gcc64
-        aria2c -o gcc-aarch64.tar.gz https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz
+        aria2c -o gcc-aarch64.tar.gz -s 16 -x 16 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz
         tar -C gcc64/ -zxvf gcc-aarch64.tar.gz
     
         mkdir gcc32
-        wget -O gcc-arm.tar.gz https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz
+        aria2c -o gcc-arm.tar.gz -s 16 -x 16 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz
         tar -C gcc32/ -zxvf gcc-arm.tar.gz
     
     - name: 下载Clang编译器
@@ -103,7 +103,7 @@ jobs:
       
     - name: 开启Kallsyms
       run: |
-        cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
+        cd $GITHUB_WORKSPACE/kernel_workspace
         echo "CONFIG_KALLSYMS=y" >> android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }}
         echo "CONFIG_KALLSYMS_ALL=y" >> android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }}
         
