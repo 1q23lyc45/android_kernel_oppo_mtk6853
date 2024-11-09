@@ -53,7 +53,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace
         mkdir android-kernel
-        git clone https://github.com/1q23lyc45/android_kernel_4.14.186_oppo_mtk6853 android-kernel --depth=1
+        git clone --depth 1 https://github.com/1q23lyc45/android_kernel_oppo_mtk6853 android-kernel
         cd android-kernel
         mv vendor ../
         cp -a 4.14.186/* ./
